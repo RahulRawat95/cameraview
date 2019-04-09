@@ -16,12 +16,13 @@
 
 package com.google.android.cameraview;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import androidx.annotation.NonNull;
 
 class CameraViewMatchers {
 

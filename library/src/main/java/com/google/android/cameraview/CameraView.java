@@ -22,12 +22,6 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -35,6 +29,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Set;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.os.ParcelableCompat;
+import androidx.core.os.ParcelableCompatCreatorCallbacks;
+import androidx.core.view.ViewCompat;
 
 public class CameraView extends FrameLayout {
 
@@ -89,7 +90,7 @@ public class CameraView extends FrameLayout {
     @SuppressWarnings("WrongConstant")
     public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (isInEditMode()){
+        if (isInEditMode()) {
             mCallbacks = null;
             mDisplayOrientationDetector = null;
             return;
@@ -156,7 +157,7 @@ public class CameraView extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (isInEditMode()){
+        if (isInEditMode()) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             return;
         }
@@ -245,7 +246,7 @@ public class CameraView extends FrameLayout {
     public void start() {
         if (!mImpl.start()) {
             //store the state ,and restore this state after fall back o Camera1
-            Parcelable state=onSaveInstanceState();
+            Parcelable state = onSaveInstanceState();
             // Camera2 uses legacy hardware layer; fall back to Camera1
             mImpl = new Camera1(mCallbacks, createPreviewImpl(getContext()));
             onRestoreInstanceState(state);
@@ -489,7 +490,7 @@ public class CameraView extends FrameLayout {
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
-                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+                = new Parcelable.ClassLoaderCreator<SavedState>() {
 
             @Override
             public SavedState createFromParcel(Parcel in, ClassLoader loader) {
@@ -497,11 +498,16 @@ public class CameraView extends FrameLayout {
             }
 
             @Override
+            public SavedState createFromParcel(Parcel source) {
+                return createFromParcel(source, null);
+            }
+
+            @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
 
-        });
+        };
 
     }
 
